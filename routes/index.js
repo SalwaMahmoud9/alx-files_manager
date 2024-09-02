@@ -8,71 +8,68 @@ function controllerRouting(app) {
   const router = express.Router();
   app.use('/', router);
 
-  // App Controller
-
-  // should return if Redis is alive and if the DB is alive
+  // Redis
   router.get('/status', (req, res) => {
     AppController.getStatus(req, res);
   });
 
-  // should return the number of users and files in DB
+  // number of users and files
   router.get('/stats', (req, res) => {
     AppController.getStats(req, res);
   });
 
   // User Controller
 
-  // should create a new user in DB
+  // new user
   router.post('/users', (req, res) => {
     UsersController.postNew(req, res);
   });
 
-  // should retrieve the user base on the token used
+  // retrieve  user
   router.get('/users/me', (req, res) => {
     UsersController.getMe(req, res);
   });
 
   // Auth Controller
 
-  // should sign-in the user by generating a new authentication token
+  // connect
   router.get('/connect', (req, res) => {
     AuthController.getConnect(req, res);
   });
 
-  // should sign-out the user based on the token
+  // disconnect
   router.get('/disconnect', (req, res) => {
     AuthController.getDisconnect(req, res);
   });
 
   // Files Controller
 
-  // should create a new file in DB and in disk
+  // post file
   router.post('/files', (req, res) => {
     FilesController.postUpload(req, res);
   });
 
-  // should retrieve the file document based on the ID
+  // retrieve file
   router.get('/files/:id', (req, res) => {
     FilesController.getShow(req, res);
   });
 
-  // should retrieve all users file documents for a
-  // specific parentId and with pagination
+  // retrieve all users 
   router.get('/files', (req, res) => {
     FilesController.getIndex(req, res);
   });
 
-  // should set isPublic to true on the file document based on the ID
+  // set isPublic
   router.put('/files/:id/publish', (req, res) => {
     FilesController.putPublish(req, res);
   });
 
-  // should set isPublic to false on the file document based on the ID
+  // set isPublic
   router.put('/files/:id/unpublish', (req, res) => {
     FilesController.putUnpublish(req, res);
   });
 
-  // should return the content of the file document based on the ID
+  // return content of file
   router.get('/files/:id/data', (req, res) => {
     FilesController.getFile(req, res);
   });
