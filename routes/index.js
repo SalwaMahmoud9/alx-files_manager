@@ -54,7 +54,7 @@ function controllerRouting(app) {
     FilesController.getShow(req, res);
   });
 
-  // retrieve all users 
+  // retrieve all users
   router.get('/files', (req, res) => {
     FilesController.getIndex(req, res);
   });
