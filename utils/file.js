@@ -6,13 +6,13 @@ import userUtils from './user';
 import basicUtils from './basic';
 
 /**
- * Module with file utilities
+ * fileUtils
  */
 const fileUtils = {
   /**
-   * Validates if body is valid for creating file
-   * @request {request_object} express request obj
-   * @return {object} object with err and validated params
+   * validateBody
+   * @request {request_object} request
+   * @return {object} object
    */
   async validateBody(request) {
     const {
@@ -65,8 +65,8 @@ const fileUtils = {
   },
 
   /**
-   * gets file document from db
-   * @query {obj} query used to find file
+   * get file
+   * @query {obj} query
    * @return {object} file
    */
   async getFile(query) {
@@ -75,9 +75,8 @@ const fileUtils = {
   },
 
   /**
-   * gets list of file documents from db belonging
-   * to a parent id
-   * @query {obj} query used to find file
+   * get list
+   * @query {obj} query
    * @return {Array} list of files
    */
   async getFilesOfParentId(query) {
@@ -86,11 +85,11 @@ const fileUtils = {
   },
 
   /**
-   * saves files to database and disk
-   * @userId {string} query used to find file
-   * @fileParams {obj} object with attributes of file to save
-   * @FOLDER_PATH {string} path to save file in disk
-   * @return {obj} object with error if present and file
+   * saves files
+   * @userId {string} userId
+   * @fileParams {obj} fileParams
+   * @FOLDER_PATH {string} FOLDER_PATH
+   * @return {obj} object
    */
   async saveFile(userId, fileParams, FOLDER_PATH) {
     const {
@@ -111,7 +110,6 @@ const fileUtils = {
     if (fileParams.type !== 'folder') {
       const fileNameUUID = uuidv4();
 
-      // const fileDataDecoded = Buffer.from(data, 'base64').toString('utf-8');
       const fileDataDecoded = Buffer.from(data, 'base64');
 
       const path = `${FOLDER_PATH}/${fileNameUUID}`;
@@ -128,9 +126,6 @@ const fileUtils = {
 
     const result = await dbClient.filesCollection.insertOne(query);
 
-    // query.userId = query.userId.toString();
-    // query.parentId = query.parentId.toString();
-
     const file = this.processFile(query);
 
     const newFile = { id: result.insertedId, ...file };
@@ -139,10 +134,10 @@ const fileUtils = {
   },
 
   /**
-   * Updates a file document in database
-   * @query {obj} query to find document to update
-   * @set {obj} object with query info to update in Mongo
-   * @return {object} updated file
+   * updateFile
+   * @query {obj} query
+   * @set {obj} object
+   * @return {object} file
    */
   async updateFile(query, set) {
     const fileList = await dbClient.filesCollection.findOneAndUpdate(
@@ -155,9 +150,9 @@ const fileUtils = {
 
   /**
    * Makes a file public or private
-   * @request {request_object} express request obj
+   * @request {request_object} request
    * @setPublish {boolean} true or false
-   * @return {object} error, status code and updated file
+   * @return {object} error, status code and file
    */
   async publishUnpublish(request, setPublish) {
     const { id: fileId } = request.params;
@@ -211,12 +206,12 @@ const fileUtils = {
   },
 
   /**
-   * Transform _id into id in a file document
-   * @doc {object} document to be processed
-   * @return {object} processed document
+   * processFile
+   * @doc {object} document
+   * @return {object} document
    */
   processFile(doc) {
-    // Changes _id for id and removes localPath
+    // Change _id for id and remove path
 
     const file = { id: doc._id, ...doc };
 
@@ -227,10 +222,9 @@ const fileUtils = {
   },
 
   /**
-   * Checks if a file is public and belongs to a
-   * specific user
-   * @file {object} file to evaluate
-   * @userId {string} id of user to check ownership
+   * isOwnerAndPublic
+   * @file {object} file
+   * @userId {string} id
    * @return {boolean} true or false
    */
   isOwnerAndPublic(file, userId) {
@@ -243,10 +237,10 @@ const fileUtils = {
   },
 
   /**
-   * Gets a files data from database
-   * @file {object} file to obtain data of
-   * @size {string} size in case of file being image
-   * @return {object} data of file or error and status code
+   * getFileData
+   * @file {object} file
+   * @size {string} size
+   * @return {object} file or error and status code
    */
   async getFileData(file, size) {
     let { localPath } = file;
@@ -257,7 +251,6 @@ const fileUtils = {
     try {
       data = await fsPromises.readFile(localPath);
     } catch (err) {
-      // console.log(err.message);
       return { error: 'Not found', code: 404 };
     }
 

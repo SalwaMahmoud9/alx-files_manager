@@ -2,14 +2,14 @@ import redisClient from './redis';
 import dbClient from './db';
 
 /**
- * Module with user utilities
+ * userUtils
  */
 const userUtils = {
   /**
-   * Gets a user id and key of redis from request
-   * @request {request_object} express request obj
-   * @return {object} object containing userId and
-   * redis key for token
+   * Get user id and key
+   * @request {request_object}
+   * @return {object} object
+   * key for token
    */
   async getUserIdAndKey(request) {
     const obj = { userId: null, key: null };
@@ -26,10 +26,10 @@ const userUtils = {
   },
 
   /**
-   * Gets a user from database
-   * @query {object} query expression for finding
+   * Get user
+   * @query {object} query
    * user
-   * @return {object} user document object
+   * @return {object} user
    */
   async getUser(query) {
     const user = await dbClient.usersCollection.findOne(query);

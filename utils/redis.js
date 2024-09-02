@@ -2,7 +2,7 @@ import redis from 'redis';
 import { promisify } from 'util';
 
 /**
- * Class for performing operations with Redis service
+ * RedisClient
  */
 class RedisClient {
   constructor() {
@@ -14,21 +14,20 @@ class RedisClient {
     });
 
     this.client.on('connect', () => {
-      // console.log('Redis client connected to the server');
     });
   }
 
   /**
-   * Checks if connection to Redis is Alive
-   * @return {boolean} true if connection alive or false if not
+   * Check connection
+   * @return {boolean} true or false
    */
   isAlive() {
     return this.client.connected;
   }
 
   /**
-   * gets value corresponding to key in redis
-   * @key {string} key to search for in redis
+   * get value
+   * @key {string} key
    * @return {string}  value of key
    */
   async get(key) {
@@ -37,9 +36,9 @@ class RedisClient {
   }
 
   /**
-   * Creates a new key in redis with a specific TTL
-   * @key {string} key to be saved in redis
-   * @value {string} value to be asigned to key
+   * Create new key
+   * @key {string} key
+   * @value {string} value
    * @duration {number} TTL of key
    * @return {undefined}  No return
    */
@@ -48,8 +47,8 @@ class RedisClient {
   }
 
   /**
-   * Deletes key in redis service
-   * @key {string} key to be deleted
+   * Delete
+   * @key {string} key
    * @return {undefined}  No return
    */
   async del(key) {
