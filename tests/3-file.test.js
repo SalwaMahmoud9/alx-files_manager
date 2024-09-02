@@ -11,9 +11,9 @@ import redisClient from '../utils/redis';
 use(chaiHttp);
 should();
 
-// User Endpoints ==============================================
+// User Endpoints
 
-describe('testing User Endpoints', () => {
+describe('User Endpoints', () => {
   const credentials = 'Basic Ym9iQGR5bGFuLmNvbTp0b3RvMTIzNCE=';
   let token = '';
   let userId = '';
@@ -35,8 +35,8 @@ describe('testing User Endpoints', () => {
   });
 
   // users
-  describe('pOST /users', () => {
-    it('returns the id and email of created user', async () => {
+  describe('POST /users', () => {
+    it('return id and email create', async () => {
       const response = await request(app).post('/users').send(user);
       const body = JSON.parse(response.text);
       expect(body.email).to.equal(user.email);
@@ -50,7 +50,7 @@ describe('testing User Endpoints', () => {
       expect(userMongo).to.exist;
     });
 
-    it('fails to create user because password is missing', async () => {
+    it('fail user because password missing', async () => {
       const user = {
         email: 'bob@dylan.com',
       };
@@ -60,7 +60,7 @@ describe('testing User Endpoints', () => {
       expect(response.statusCode).to.equal(400);
     });
 
-    it('fails to create user because email is missing', async () => {
+    it('fail user because email missing', async () => {
       const user = {
         password: 'toto1234!',
       };
@@ -70,7 +70,7 @@ describe('testing User Endpoints', () => {
       expect(response.statusCode).to.equal(400);
     });
 
-    it('fails to create user because it already exists', async () => {
+    it('fail user because it exists', async () => {
       const user = {
         email: 'bob@dylan.com',
         password: 'toto1234!',
@@ -84,15 +84,15 @@ describe('testing User Endpoints', () => {
 
   // Connect
 
-  describe('gET /connect', () => {
-    it('fails if no user is found for credentials', async () => {
+  describe('GET /connect', () => {
+    it('fail no user', async () => {
       const response = await request(app).get('/connect').send();
       const body = JSON.parse(response.text);
       expect(body).to.eql({ error: 'Unauthorized' });
       expect(response.statusCode).to.equal(401);
     });
 
-    it('returns a token if user is for credentials', async () => {
+    it('return a token', async () => {
       const spyRedisSet = sinon.spy(redisClient, 'set');
 
       const response = await request(app)
@@ -110,7 +110,7 @@ describe('testing User Endpoints', () => {
       spyRedisSet.restore();
     });
 
-    it('token exists in redis', async () => {
+    it('token exist', async () => {
       const redisToken = await redisClient.get(`auth_${token}`);
       expect(redisToken).to.exist;
     });
@@ -123,14 +123,14 @@ describe('testing User Endpoints', () => {
       await redisClient.client.flushall('ASYNC');
     });
 
-    it('should responde with unauthorized because there is no token for user', async () => {
+    it('reponse unauthorized no token', async () => {
       const response = await request(app).get('/disconnect').send();
       const body = JSON.parse(response.text);
       expect(body).to.eql({ error: 'Unauthorized' });
       expect(response.statusCode).to.equal(401);
     });
 
-    it('should sign-out the user based on the token', async () => {
+    it('sign-out on the token', async () => {
       const response = await request(app)
         .get('/disconnect')
         .set('X-Token', token)
@@ -139,13 +139,13 @@ describe('testing User Endpoints', () => {
       expect(response.statusCode).to.equal(204);
     });
 
-    it('token no longer exists in redis', async () => {
+    it('token no longer exists ', async () => {
       const redisToken = await redisClient.get(`auth_${token}`);
       expect(redisToken).to.not.exist;
     });
   });
 
-  describe('gET /users/me', () => {
+  describe('GET /users/me', () => {
     before(async () => {
       const response = await request(app)
         .get('/connect')
@@ -155,7 +155,7 @@ describe('testing User Endpoints', () => {
       token = body.token;
     });
 
-    it('should return unauthorized because no token is passed', async () => {
+    it('return unauthorized because no token', async () => {
       const response = await request(app).get('/users/me').send();
       const body = JSON.parse(response.text);
 
@@ -163,7 +163,7 @@ describe('testing User Endpoints', () => {
       expect(response.statusCode).to.equal(401);
     });
 
-    it('should retrieve the user base on the token used', async () => {
+    it('retrieve user base the token', async () => {
       const response = await request(app)
         .get('/users/me')
         .set('X-Token', token)

@@ -9,7 +9,7 @@ should();
 
 // redisClient
 
-describe('testing the clients for MongoDB and Redis', () => {
+describe('testing the clients', () => {
   describe('redis Client', () => {
     before(async () => {
       await redisClient.client.flushall('ASYNC');
@@ -19,19 +19,19 @@ describe('testing the clients for MongoDB and Redis', () => {
       await redisClient.client.flushall('ASYNC');
     });
 
-    it('shows that connection is alive', async () => {
+    it('connection is alive', async () => {
       expect(redisClient.isAlive()).to.equal(true);
     });
 
-    it('returns key as null because it does not exist', async () => {
+    it('return null', async () => {
       expect(await redisClient.get('myKey')).to.equal(null);
     });
 
-    it('set key can be called without issue', async () => {
+    it('key can called', async () => {
       expect(await redisClient.set('myKey', 12, 1)).to.equal(undefined);
     });
 
-    it('returns key with null because it expired', async () => {
+    it('return key', async () => {
       const sleep = promisify(setTimeout);
       await sleep(1100);
       expect(await redisClient.get('myKey')).to.equal(null);
@@ -49,15 +49,15 @@ describe('testing the clients for MongoDB and Redis', () => {
       await dbClient.filesCollection.deleteMany({});
     });
 
-    it('shows that connection is alive', () => {
+    it('show connection', () => {
       expect(dbClient.isAlive()).to.equal(true);
     });
 
-    it('shows that connection is alive', () => {
+    it('show connection', () => {
       expect(dbClient.isAlive()).to.equal(true);
     });
 
-    it('shows number of user documents', async () => {
+    it('show number of user', async () => {
       await dbClient.usersCollection.deleteMany({});
       expect(await dbClient.nbUsers()).to.equal(0);
 
@@ -66,7 +66,7 @@ describe('testing the clients for MongoDB and Redis', () => {
       expect(await dbClient.nbUsers()).to.equal(2);
     });
 
-    it('shows number of file documents', async () => {
+    it('show number of file', async () => {
       await dbClient.filesCollection.deleteMany({});
       expect(await dbClient.nbFiles()).to.equal(0);
 
